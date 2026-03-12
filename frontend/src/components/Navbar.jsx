@@ -7,6 +7,7 @@ import Magnetic from "./Magnetic";
 const Nav = () => {
     const [show, setShow] = useState(true);
     const [lastY, setLastY] = useState(0);
+    const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
@@ -16,7 +17,8 @@ const Nav = () => {
     /* Hide / Show Navbar on Scroll */
     useEffect(() => {
         const controlNavbar = () => {
-            setShow(window.scrollY < lastY);
+            setShow(window.scrollY < lastY || window.scrollY < 50);
+            setScrolled(window.scrollY > 50);
             setLastY(window.scrollY);
         };
         window.addEventListener("scroll", controlNavbar);
@@ -123,8 +125,8 @@ const Nav = () => {
     return (
         <nav>
             <div
-                className={`fixed top-0 w-full z-50 px-4 sm:px-6 md:px-8 lg:px-12 py-3 sm:py-4 transition-transform duration-500 flex items-center justify-between bg-[#f0ebd8] border-b-2 border-[#0d1b2a] ${show ? "translate-y-0" : "-translate-y-full"
-                    }`}
+                className={`fixed top-0 w-full z-50 px-4 sm:px-6 md:px-8 lg:px-12 py-3 sm:py-4 transition-all duration-500 flex items-center justify-between ${show ? "translate-y-0" : "-translate-y-full"
+                    } ${scrolled ? "bg-[#f0ebd8]/70 backdrop-blur-lg shadow-xl border-b border-[#0d1b2a]/10" : "bg-[#f0ebd8] border-b-2 border-[#0d1b2a]"}`}
             >
                 {/* Hamburger */}
                 <div
