@@ -1,13 +1,13 @@
 import axios from '../../api/axios.config.js';
-import React, {useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import {ScrollTrigger} from 'gsap/ScrollTrigger';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Footer from '../../components/Footer';
 import useMetadata from '../../hooks/useMetadata';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const contactInfo=[
+const contactInfo = [
     {
         iconPath: <path d="M3 3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3ZM20 7.23792L12.0718 14.338L4 7.21594V19H20V7.23792ZM4.51146 5L12.0619 11.662L19.501 5H4.51146Z" />,
         title: 'Email Us',
@@ -38,68 +38,104 @@ const contactInfo=[
     },
 ];
 
-const whyCards=[
-    {title: 'Admissions Guidance', desc: 'Get personalized help with the application process', iconPath: <path d="M21 8C22.1046 8 23 8.89543 23 10V14C23 15.1046 22.1046 16 21 16H19.9381C19.446 19.9463 16.0796 23 12 23V21C15.3137 21 18 18.3137 18 15V9C18 5.68629 15.3137 3 12 3C8.68629 3 6 5.68629 6 9V16H3C1.89543 16 1 15.1046 1 14V10C1 8.89543 1.89543 8 3 8H4.06189C4.55399 4.05369 7.92038 1 12 1C16.0796 1 19.446 4.05369 19.9381 8H21Z" />},
-    {title: '24/7 Support', desc: 'Round-the-clock assistance for all your queries', iconPath: <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z" />},
-    {title: 'Feedback & Suggestions', desc: 'Share your thoughts to help us improve', iconPath: <path d="M21 3C21.5523 3 22 3.44772 22 4V20.0066C22 20.5552 21.5447 21 21.0082 21H2.9918C2.44405 21 2 20.5551 2 20.0066V19H20V7.3L12 14.5L2 5.5V4C2 3.44772 2.44772 3 3 3H21Z" />},
+const whyCards = [
+    { title: 'Admissions Guidance', desc: 'Get personalized help with the application process', iconPath: <path d="M21 8C22.1046 8 23 8.89543 23 10V14C23 15.1046 22.1046 16 21 16H19.9381C19.446 19.9463 16.0796 23 12 23V21C15.3137 21 18 18.3137 18 15V9C18 5.68629 15.3137 3 12 3C8.68629 3 6 5.68629 6 9V16H3C1.89543 16 1 15.1046 1 14V10C1 8.89543 1.89543 8 3 8H4.06189C4.55399 4.05369 7.92038 1 12 1C16.0796 1 19.446 4.05369 19.9381 8H21Z" /> },
+    { title: '24/7 Support', desc: 'Round-the-clock assistance for all your queries', iconPath: <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z" /> },
+    { title: 'Feedback & Suggestions', desc: 'Share your thoughts to help us improve', iconPath: <path d="M21 3C21.5523 3 22 3.44772 22 4V20.0066C22 20.5552 21.5447 21 21.0082 21H2.9918C2.44405 21 2 20.5551 2 20.0066V19H20V7.3L12 14.5L2 5.5V4C2 3.44772 2.44772 3 3 3H21Z" /> },
 ];
 
-export default function ContactPage()
-{
+export default function ContactPage() {
     useMetadata(
         'Contact Us',
         'Have questions about AuraLivings? Get in touch with our team for admissions guidance, support, or to schedule a visit to our premium student hostels.'
     );
-    const [formData, setFormData]=useState({name: '', email: '', phone: '', subject: '', message: ''});
-    const [isSubmitting, setIsSubmitting]=useState(false);
-    const [submissionSuccess, setSubmissionSuccess]=useState(false);
-    const mainRef=useRef(null);
+    const [formData, setFormData] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submissionSuccess, setSubmissionSuccess] = useState(false);
+    const mainRef = useRef(null);
 
-    const handleChange=(e) => setFormData((p) => ({...p, [e.target.id]: e.target.value}));
+    const handleChange = (e) => setFormData((p) => ({ ...p, [e.target.id]: e.target.value }));
 
-    const handleSubmit=async (e) =>
-    {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
         setSubmissionSuccess(false);
-        try {await axios.post('/contact/send/message', formData);} catch (_) {}
+        try { await axios.post('/contact/send/message', formData); } catch (_) { }
         setIsSubmitting(false);
         setSubmissionSuccess(true);
-        setFormData({name: '', email: '', phone: '', subject: '', message: ''});
+        setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
     };
 
-    useEffect(() =>
-    {
-        const ctx=gsap.context(() =>
-        {
-            gsap.timeline({delay: 0.2})
-                .from('.c-badge', {y: -30, opacity: 0, duration: 0.7, ease: 'power3.out'})
-                .from('.c-title', {y: 60, opacity: 0, duration: 1, ease: 'power3.out'}, '-=0.4')
-                .from('.c-sub', {y: 40, opacity: 0, duration: 0.8, ease: 'power3.out'}, '-=0.5');
+    useEffect(() => {
+        const ctx = gsap.context(() => {
+            /* ── REVEAL ANIMATIONS ── */
+            const reveals = gsap.utils.toArray('.reveal');
+            reveals.forEach((el) => {
+                gsap.fromTo(el, {
+                    y: 80,
+                    opacity: 0,
+                    clipPath: "polygon(0 0, 100% 0, 100% 0, 0 0)"
+                }, {
+                    y: 0,
+                    opacity: 1,
+                    clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
+                    duration: 1.2,
+                    ease: "power4.out",
+                    scrollTrigger: {
+                        trigger: el,
+                        start: "top 85%",
+                        toggleActions: "play none none none"
+                    }
+                });
+            });
 
+            /* ── HERO ── */
+            gsap.timeline({ delay: 2.5 })
+                .from('.c-badge', { y: -30, opacity: 0, duration: 0.7, ease: 'power3.out' })
+                .from('.c-title', {
+                    y: 100,
+                    opacity: 0,
+                    duration: 1.5,
+                    skewY: 7,
+                    ease: 'expo.out'
+                }, '-=0.4')
+                .from('.c-sub', { y: 40, opacity: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5');
+
+            /* ── PANELS ── */
             gsap.from('.c-left-panel', {
-                x: -60, opacity: 0, duration: 0.8, ease: 'power3.out',
-                scrollTrigger: {trigger: '.c-grid', start: 'top 84%', once: true},
+                x: -100,
+                opacity: 0,
+                duration: 1.2,
+                ease: 'expo.out',
+                scrollTrigger: { trigger: '.c-grid', start: 'top 80%' },
             });
             gsap.from('.c-right-panel', {
-                x: 60, opacity: 0, duration: 0.8, ease: 'power3.out',
-                scrollTrigger: {trigger: '.c-grid', start: 'top 84%', once: true},
+                x: 100,
+                opacity: 0,
+                duration: 1.2,
+                ease: 'expo.out',
+                scrollTrigger: { trigger: '.c-grid', start: 'top 80%' },
             });
-            gsap.from('.why-contact-heading', {
-                y: 50, opacity: 0, duration: 0.8, ease: 'power3.out',
-                scrollTrigger: {trigger: '.why-contact-section', start: 'top 83%', once: true},
-            });
+
+            /* ── WHY CARDS ── */
             gsap.from('.why-card', {
-                y: 60, opacity: 0, duration: 0.7, stagger: 0.18, ease: 'back.out(1.3)',
-                scrollTrigger: {trigger: '.why-cards-grid', start: 'top 85%', once: true},
+                y: 50,
+                opacity: 0,
+                duration: 0.8,
+                stagger: 0.1,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: '.why-cards-grid',
+                    start: 'top 85%'
+                }
             });
         }, mainRef);
         return () => ctx.kill();
     }, []);
 
     /* shared outer panel style — cream border + dark interior */
-    const panelOuter='rounded-2xl sm:rounded-3xl p-[3px] shadow-2xl bg-[#f0ebd8]';
-    const panelInner='rounded-2xl sm:rounded-3xl bg-[#0d1b2a] h-full p-6 sm:p-8 flex flex-col';
+    const panelOuter = 'rounded-2xl sm:rounded-3xl p-[3px] shadow-2xl bg-[#f0ebd8]';
+    const panelInner = 'rounded-2xl sm:rounded-3xl bg-[#0d1b2a] h-full p-6 sm:p-8 flex flex-col';
 
     return (
         <div ref={mainRef} className="w-full min-h-screen bg-[#0d1b2a] overflow-x-hidden">
@@ -149,7 +185,7 @@ export default function ContactPage()
                                                 <h3 className="text-sm sm:text-base font-bold text-[#0d1b2a] leading-snug">{item.title}</h3>
                                                 {item.href
                                                     ? <a href={item.href} className="text-xs sm:text-sm font-semibold text-[#0d1b2a] hover:underline break-all">{item.detail}</a>
-                                                    :<p className="text-xs sm:text-sm font-semibold text-[#0d1b2a]">{item.detail}</p>
+                                                    : <p className="text-xs sm:text-sm font-semibold text-[#0d1b2a]">{item.detail}</p>
                                                 }
                                             </div>
                                         </div>
@@ -163,7 +199,7 @@ export default function ContactPage()
                             <div className={panelInner}>
                                 <h2 className="text-2xl sm:text-3xl font-bold text-[#f0ebd8] mb-6">Send Us a Message</h2>
 
-                                {submissionSuccess&&(
+                                {submissionSuccess && (
                                     <div className="mb-4 bg-green-500/20 border border-green-400 text-green-300 p-3 rounded-xl text-sm">
                                         Message sent! We'll get back to you soon. ✓
                                     </div>
@@ -173,13 +209,13 @@ export default function ContactPage()
                                     <div className="grid grid-cols-2 gap-3">
                                         {['name', 'email'].map((f) => (
                                             <input key={f} id={f} value={formData[f]} onChange={handleChange} required
-                                                placeholder={f.charAt(0).toUpperCase()+f.slice(1)}
+                                                placeholder={f.charAt(0).toUpperCase() + f.slice(1)}
                                                 className="w-full px-4 py-3 rounded-xl bg-[#f0ebd8] text-[#0d1b2a] placeholder-[#0d1b2a]/60 outline-none focus:ring-2 focus:ring-[#f0ebd8]/40 transition-all text-sm" />
                                         ))}
                                     </div>
                                     {['phone', 'subject'].map((f) => (
                                         <input key={f} id={f} value={formData[f]} onChange={handleChange} required
-                                            placeholder={f.charAt(0).toUpperCase()+f.slice(1)}
+                                            placeholder={f.charAt(0).toUpperCase() + f.slice(1)}
                                             className="w-full px-4 py-3 rounded-xl bg-[#f0ebd8] text-[#0d1b2a] placeholder-[#0d1b2a]/60 outline-none focus:ring-2 focus:ring-[#f0ebd8]/40 transition-all text-sm" />
                                     ))}
                                     <textarea id="message" rows={4} required placeholder="Your Message"
@@ -187,7 +223,7 @@ export default function ContactPage()
                                         className="w-full flex-1 px-4 py-3 rounded-xl bg-[#f0ebd8] text-[#0d1b2a] placeholder-[#0d1b2a]/60 outline-none focus:ring-2 focus:ring-[#f0ebd8]/40 resize-none transition-all text-sm" />
                                     <button disabled={isSubmitting}
                                         className="w-full py-3 sm:py-4 rounded-xl bg-[#f0ebd8] text-[#0d1b2a] font-bold text-base hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-50 mt-auto">
-                                        {isSubmitting? 'Sending…':'Send Message'}
+                                        {isSubmitting ? 'Sending…' : 'Send Message'}
                                     </button>
                                 </form>
                             </div>
@@ -200,11 +236,11 @@ export default function ContactPage()
             <section className="why-contact-section w-full bg-[#f0ebd8] py-14 sm:py-20 lg:py-28">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="why-contact-heading text-center mb-10 sm:mb-14 space-y-3">
-                        <span className="inline-block px-5 py-2 bg-[#0d1b2a] text-[#f0ebd8] rounded-full text-xs sm:text-sm font-semibold">
+                        <span className="reveal inline-block px-5 py-2 bg-[#0d1b2a] text-[#f0ebd8] rounded-full text-xs sm:text-sm font-semibold">
                             Why Reach Out
                         </span>
-                        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#0d1b2a]">We're Here to Help You Succeed</h2>
-                        <p className="text-sm sm:text-base text-[#0d1b2a] opacity-75 max-w-xl mx-auto">
+                        <h2 className="reveal text-2xl sm:text-3xl lg:text-4xl font-bold text-[#0d1b2a]">We're Here to Help You Succeed</h2>
+                        <p className="reveal text-sm sm:text-base text-[#0d1b2a] opacity-75 max-w-xl mx-auto">
                             Your questions and concerns matter to us.
                         </p>
                     </div>
