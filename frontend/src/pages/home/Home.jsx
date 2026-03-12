@@ -107,11 +107,10 @@ export default function Home() {
             const heroTl = gsap.timeline({ delay: 2.5 }); // Wait for preloader
             heroTl
                 .from('.hero-title span', {
-                    y: 100,
+                    y: 120,
                     opacity: 0,
-                    stagger: 0.2,
-                    duration: 1.5,
-                    skewY: 7,
+                    stagger: 0.15,
+                    duration: 1.2,
                     ease: 'expo.out'
                 })
                 .from('.hero-subtitle', { y: 30, opacity: 0, duration: 1, ease: 'power3.out' }, '-=1')
