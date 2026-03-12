@@ -299,7 +299,12 @@ export default function Home() {
                 style={{ backgroundImage: `url('${siteImages?.heroBg || '/main1.png'}')`, backgroundPosition: "center", backgroundSize: "cover" }}
                 className="min-h-screen w-full relative bg-[#0d1b2a] flex items-center"
             >
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-12 py-24 lg:py-0">
+                {/* Ambient Glows */}
+                <div className="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] bg-[#f0ebd8]/5 rounded-full blur-[120px] pointer-events-none animate-pulse" />
+                <div className="absolute bottom-[10%] right-[-5%] w-[30vw] h-[30vw] bg-[#f0ebd8]/3 rounded-full blur-[100px] pointer-events-none" style={{ animation: 'float 20s infinite linear' }} />
+                <div className="absolute top-[20%] right-[15%] w-[25vw] h-[25vw] bg-[#f0ebd8]/4 rounded-full blur-[110px] pointer-events-none" style={{ animation: 'float 18s infinite linear reverse' }} />
+
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col lg:flex-row items-center justify-between min-h-[85vh] py-24 lg:py-0">
 
                     {/* Text */}
                     <div className="w-full lg:w-1/2 flex flex-col gap-6 text-center lg:text-left mt-8 lg:mt-0">
