@@ -1,5 +1,6 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import Magnetic from './Magnetic';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const HostelCard = (props) => {
     const navigate = useNavigate();
@@ -9,15 +10,15 @@ const HostelCard = (props) => {
         : '/placeholder-hostel.jpg';
 
     // Format price with currency symbol
-    const formattedPrice = `₹${props.price?.toLocaleString('en-IN') || '0'}`;
+    const formattedPrice = `₹${props.price?.toLocaleString('en-IN') || '0'} `;
     const hasDiscount = props.discountedPrice && props.discountedPrice < props.price;
-    const formattedDiscountedPrice = hasDiscount ? `₹${props.discountedPrice?.toLocaleString('en-IN')}` : null;
+    const formattedDiscountedPrice = hasDiscount ? `₹${props.discountedPrice?.toLocaleString('en-IN')} ` : null;
 
     // Calculate reviews count from rating (placeholder logic)
     const reviewsCount = Math.floor((props.rating || 0) * 10);
 
     const handleCardClick = () => {
-        navigate(`/hostel/${props._id}`);
+        navigate(`/ hostel / ${props._id} `);
     };
 
     return (
@@ -134,12 +135,23 @@ const HostelCard = (props) => {
                     {/* Beds Available — hostel only */}
                     {props.propertyType !== 'flat' && props.totalRemainingBeds > 0 && (
                         <div className='flex items-center gap-1.5 text-xs sm:text-sm text-[#0d1b2a]'>
-                            <div className={`w-2 h-2 rounded-full ${props.totalRemainingBeds < 5 ? 'bg-red-500' : 'bg-green-500'}`}></div>
+                            <div className={`w - 2 h - 2 rounded - full ${props.totalRemainingBeds < 5 ? 'bg-red-500' : 'bg-green-500'} `}></div>
                             <span className='opacity-70'>
                                 <span className='font-bold opacity-100'>{props.totalRemainingBeds}</span> spots left
                             </span>
                         </div>
                     )}
+                </div>
+
+                {/* View Details Button — Magnetic */}
+                <div className="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 pointer-events-none group-hover:pointer-events-auto">
+                    <Magnetic strength={0.4}>
+                        <div className="w-12 h-12 bg-[#0d1b2a] text-[#f0ebd8] rounded-full flex items-center justify-center shadow-lg transform scale-0 group-hover:scale-100 transition-transform duration-500">
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                            </svg>
+                        </div>
+                    </Magnetic>
                 </div>
 
                 {/* Hover Effect Overlay */}
