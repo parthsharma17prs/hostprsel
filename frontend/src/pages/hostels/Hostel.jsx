@@ -174,7 +174,7 @@ const Hostel = () => {
                                 Discover design-forward residences built for your success. High-speed Wi-Fi, chef-curated meals, and a community wired for excellence.
                             </p>
                             <Magnetic>
-                                <button onClick={() => document.querySelector('.hostel-grid')?.scrollIntoView({ behavior: 'smooth' })} className='hostel-hero-btn bg-[#f0ebd8] text-[#0d1b2a] px-10 py-4 rounded-full font-bold hover:scale-105 transition-all duration-300 text-base sm:text-lg shadow-2xl'>
+                                <button onClick={() => document.querySelector('.hostel-grid')?.scrollIntoView({ behavior: 'smooth' })} className='hostel-hero-btn shimmer relative overflow-hidden bg-[#f0ebd8] text-[#0d1b2a] px-10 py-4 rounded-full font-bold hover:scale-105 transition-all duration-300 text-base sm:text-lg shadow-2xl'>
                                     Browse Hostels
                                 </button>
                             </Magnetic>

@@ -317,7 +317,7 @@ export default function Home() {
                             <Magnetic>
                                 <button
                                     onClick={() => navigate('/hostel')}
-                                    className="bg-[#f0ebd8] text-[#0d1b2a] px-10 text-base sm:text-lg py-4 rounded-full hover:scale-105 active:scale-95 transition-all duration-200 font-semibold shadow-xl"
+                                    className="shimmer relative overflow-hidden bg-[#f0ebd8] text-[#0d1b2a] px-10 text-base sm:text-lg py-4 rounded-full hover:scale-105 active:scale-95 transition-all duration-200 font-semibold shadow-xl"
                                 >
                                     Explore Hostels
                                 </button>
