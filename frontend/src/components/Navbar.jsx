@@ -30,28 +30,28 @@ const Nav = () => {
         const ctx = gsap.context(() => {
             gsap.from(".nav-text", {
                 opacity: 0,
-                y: -20,
-                duration: 1.5,
-                stagger: 0.2,
-                ease: "power2.inOut",
+                y: -15,
+                duration: 1.2,
+                stagger: 0.1,
+                ease: "expo.out",
+                delay: 2.8 // Start after preloader + small buffer
             });
 
             gsap.from(".logo", {
                 opacity: 0,
-                scale: 2,
-                duration: 1,
-                ease: "bounce.inOut",
+                x: -30,
+                duration: 1.2,
+                ease: "expo.out",
+                delay: 2.7
             });
 
-            const tl = gsap.timeline();
-            tl.from(".logo-text", {
-                x: 100,
+            gsap.from(".logo-text", {
+                x: 30,
                 opacity: 0,
-                duration: 1,
-                ease: "bounce.inOut",
-            })
-                .to(".logo", { x: -100, duration: 1 }, "<")
-                .to(".logo", { x: 0, rotate: 360, duration: 1 });
+                duration: 1.2,
+                ease: "expo.out",
+                delay: 2.9
+            });
         });
 
         return () => ctx.revert();
