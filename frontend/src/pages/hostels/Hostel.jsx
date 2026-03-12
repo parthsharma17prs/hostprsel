@@ -10,6 +10,7 @@ import img7 from '../../assets/img7.jpg';
 import HostelCard from '../../components/HostelCard';
 import Footer from '../../components/Footer';
 import useMetadata from '../../hooks/useMetadata';
+import Magnetic from '../../components/Magnetic';
 import { getSiteSettings } from '../../api/hostel.api';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -172,9 +173,11 @@ const Hostel = () => {
                             <p className='hostel-hero-desc text-[#f0ebd8] text-base sm:text-lg md:text-xl lg:text-xl leading-relaxed max-w-lg opacity-90'>
                                 Discover design-forward residences built for your success. High-speed Wi-Fi, chef-curated meals, and a community wired for excellence.
                             </p>
-                            <button onClick={() => document.querySelector('.hostel-grid')?.scrollIntoView({ behavior: 'smooth' })} className='hostel-hero-btn bg-[#f0ebd8] text-[#0d1b2a] px-10 py-4 rounded-full font-bold hover:scale-105 transition-all duration-300 text-base sm:text-lg shadow-2xl'>
-                                Browse Hostels
-                            </button>
+                            <Magnetic>
+                                <button onClick={() => document.querySelector('.hostel-grid')?.scrollIntoView({ behavior: 'smooth' })} className='hostel-hero-btn bg-[#f0ebd8] text-[#0d1b2a] px-10 py-4 rounded-full font-bold hover:scale-105 transition-all duration-300 text-base sm:text-lg shadow-2xl'>
+                                    Browse Hostels
+                                </button>
+                            </Magnetic>
                         </div>
                     </div>
 

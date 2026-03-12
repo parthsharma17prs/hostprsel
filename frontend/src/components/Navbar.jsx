@@ -1,24 +1,22 @@
-import React, {useEffect, useState, useRef} from "react";
-import {NavLink, useNavigate} from "react-router-dom";
+import React, { useEffect, useState, useRef } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import gsap from "gsap";
 import logo from "../assets/logo.png";
+import Magnetic from "./Magnetic";
 
-const Nav=() =>
-{
-    const [show, setShow]=useState(true);
-    const [lastY, setLastY]=useState(0);
-    const [menuOpen, setMenuOpen]=useState(false);
-    const [searchOpen, setSearchOpen]=useState(false);
-    const [searchQuery, setSearchQuery]=useState("");
-    const searchInputRef=useRef(null);
-    const navigate=useNavigate();
+const Nav = () => {
+    const [show, setShow] = useState(true);
+    const [lastY, setLastY] = useState(0);
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [searchOpen, setSearchOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
+    const searchInputRef = useRef(null);
+    const navigate = useNavigate();
 
     /* Hide / Show Navbar on Scroll */
-    useEffect(() =>
-    {
-        const controlNavbar=() =>
-        {
-            setShow(window.scrollY<lastY);
+    useEffect(() => {
+        const controlNavbar = () => {
+            setShow(window.scrollY < lastY);
             setLastY(window.scrollY);
         };
         window.addEventListener("scroll", controlNavbar);
@@ -26,10 +24,8 @@ const Nav=() =>
     }, [lastY]);
 
     /* GSAP Intro Animation */
-    useEffect(() =>
-    {
-        const ctx=gsap.context(() =>
-        {
+    useEffect(() => {
+        const ctx = gsap.context(() => {
             gsap.from(".nav-text", {
                 opacity: 0,
                 y: -20,
@@ -45,46 +41,42 @@ const Nav=() =>
                 ease: "bounce.inOut",
             });
 
-            const tl=gsap.timeline();
+            const tl = gsap.timeline();
             tl.from(".logo-text", {
                 x: 100,
                 opacity: 0,
                 duration: 1,
                 ease: "bounce.inOut",
             })
-                .to(".logo", {x: -100, duration: 1}, "<")
-                .to(".logo", {x: 0, rotate: 360, duration: 1});
+                .to(".logo", { x: -100, duration: 1 }, "<")
+                .to(".logo", { x: 0, rotate: 360, duration: 1 });
         });
 
         return () => ctx.revert();
     }, []);
 
     /* Mobile Menu Animation */
-    useEffect(() =>
-    {
-        if (menuOpen)
-        {
+    useEffect(() => {
+        if (menuOpen) {
             document.body.classList.add("no-scroll");
 
             gsap.fromTo(
                 ".mobile-menu",
-                {x: -300, opacity: 0},
-                {x: 0, opacity: 1, duration: 0.5}
+                { x: -300, opacity: 0 },
+                { x: 0, opacity: 1, duration: 0.5 }
             );
 
             gsap.fromTo(
                 ".menu-overlay",
-                {opacity: 0},
-                {opacity: 1, duration: 0.5}
+                { opacity: 0 },
+                { opacity: 1, duration: 0.5 }
             );
-        } else
-        {
+        } else {
             document.body.classList.remove("no-scroll");
         }
     }, [menuOpen]);
 
-    const closeMenu=() =>
-    {
+    const closeMenu = () => {
         gsap.to(".mobile-menu", {
             x: -300,
             opacity: 0,
@@ -98,38 +90,30 @@ const Nav=() =>
     };
 
     /* Search handlers */
-    const toggleSearch=() =>
-    {
-        if (searchOpen)
-        {
-            gsap.to(".search-bar", {width: 0, opacity: 0, duration: 0.3, ease: "power2.inOut", onComplete: () => setSearchOpen(false)});
-        } else
-        {
+    const toggleSearch = () => {
+        if (searchOpen) {
+            gsap.to(".search-bar", { width: 0, opacity: 0, duration: 0.3, ease: "power2.inOut", onComplete: () => setSearchOpen(false) });
+        } else {
             setSearchOpen(true);
-            setTimeout(() =>
-            {
-                gsap.fromTo(".search-bar", {width: 0, opacity: 0}, {width: "100%", opacity: 1, duration: 0.35, ease: "power2.out"});
+            setTimeout(() => {
+                gsap.fromTo(".search-bar", { width: 0, opacity: 0 }, { width: "100%", opacity: 1, duration: 0.35, ease: "power2.out" });
                 searchInputRef.current?.focus();
             }, 10);
         }
     };
 
-    const handleSearchSubmit=(e) =>
-    {
+    const handleSearchSubmit = (e) => {
         e.preventDefault();
-        if (searchQuery.trim())
-        {
+        if (searchQuery.trim()) {
             navigate(`/hostel?search=${encodeURIComponent(searchQuery.trim())}`);
             setSearchQuery("");
             setSearchOpen(false);
         }
     };
 
-    const handleMobileSearch=(e) =>
-    {
+    const handleMobileSearch = (e) => {
         e.preventDefault();
-        if (searchQuery.trim())
-        {
+        if (searchQuery.trim()) {
             navigate(`/hostel?search=${encodeURIComponent(searchQuery.trim())}`);
             setSearchQuery("");
             closeMenu();
@@ -139,7 +123,7 @@ const Nav=() =>
     return (
         <nav>
             <div
-                className={`fixed top-0 w-full z-50 px-4 sm:px-6 md:px-8 lg:px-12 py-3 sm:py-4 transition-transform duration-500 flex items-center justify-between bg-[#f0ebd8] border-b-2 border-[#0d1b2a] ${show? "translate-y-0":"-translate-y-full"
+                className={`fixed top-0 w-full z-50 px-4 sm:px-6 md:px-8 lg:px-12 py-3 sm:py-4 transition-transform duration-500 flex items-center justify-between bg-[#f0ebd8] border-b-2 border-[#0d1b2a] ${show ? "translate-y-0" : "-translate-y-full"
                     }`}
             >
                 {/* Hamburger */}
@@ -155,24 +139,25 @@ const Nav=() =>
                 {/* Desktop Menu */}
                 <div className="hidden lg:flex text-sm xl:text-base space-x-6 xl:space-x-8">
                     {["/", "/hostel", "/contact"].map((path) => (
-                        <NavLink
-                            key={path}
-                            to={path}
-                            className={({isActive}) =>
-                                isActive
-                                    ? "nav-text text-[#0d1b2a] font-bold border-b-2 border-[#0d1b2a] pb-1"
-                                    :"nav-text text-[#0d1b2a] hover:text-[#0d1b2a]/70 transition-colors"
-                            }
-                        >
-                            {path==="/"
-                                ? "HOME"
-                                :path.replace("/", "").toUpperCase()}
-                        </NavLink>
+                        <Magnetic key={path}>
+                            <NavLink
+                                to={path}
+                                className={({ isActive }) =>
+                                    isActive
+                                        ? "nav-text text-[#0d1b2a] font-bold border-b-2 border-[#0d1b2a] pb-1"
+                                        : "nav-text text-[#0d1b2a] hover:text-[#0d1b2a]/70 transition-colors"
+                                }
+                            >
+                                {path === "/"
+                                    ? "HOME"
+                                    : path.replace("/", "").toUpperCase()}
+                            </NavLink>
+                        </Magnetic>
                     ))}
                 </div>
 
                 {/* Mobile Menu */}
-                {menuOpen&&(
+                {menuOpen && (
                     <>
                         <div
                             className="menu-overlay fixed top-0 left-0 w-full h-screen bg-[#0d1b2a]/80 backdrop-blur-sm z-40"
@@ -202,13 +187,13 @@ const Nav=() =>
                                     key={path}
                                     to={path}
                                     onClick={closeMenu}
-                                    className={({isActive}) =>
+                                    className={({ isActive }) =>
                                         isActive
                                             ? "nav-text text-lg sm:text-xl text-[#0d1b2a] font-bold border-l-4 border-[#0d1b2a] pl-4"
-                                            :"nav-text text-lg sm:text-xl text-[#0d1b2a] hover:text-[#0d1b2a]/70 transition-colors pl-4"
+                                            : "nav-text text-lg sm:text-xl text-[#0d1b2a] hover:text-[#0d1b2a]/70 transition-colors pl-4"
                                     }
                                 >
-                                    {path==="/"? "HOME":path.replace("/", "").toUpperCase()}
+                                    {path === "/" ? "HOME" : path.replace("/", "").toUpperCase()}
                                 </NavLink>
                             ))}
 
@@ -226,15 +211,17 @@ const Nav=() =>
                 )}
 
                 <div className="absolute left-1/2 -translate-x-1/2 flex items-center pr-2">
-                    <NavLink to="/" className="logo-text flex items-center gap-1 sm:gap-2 font-bold text-[#0d1b2a] tracking-tight hover:opacity-80 transition-opacity">
-                        <img src={logo} alt="AuraLivings Logo" className="logo w-8 h-8 sm:w-11 sm:h-11 object-contain rounded-lg" />
-                        <span className="text-lg sm:text-xl lg:text-2xl whitespace-nowrap">Aura<span className="opacity-50">Livings</span></span>
-                    </NavLink>
+                    <Magnetic>
+                        <NavLink to="/" className="logo-text flex items-center gap-1 sm:gap-2 font-bold text-[#0d1b2a] tracking-tight hover:opacity-80 transition-opacity">
+                            <img src={logo} alt="AuraLivings Logo" className="logo w-8 h-8 sm:w-11 sm:h-11 object-contain rounded-lg" />
+                            <span className="text-lg sm:text-xl lg:text-2xl whitespace-nowrap">Aura<span className="opacity-50">Livings</span></span>
+                        </NavLink>
+                    </Magnetic>
                 </div>
 
                 {/* Search */}
                 <div className="flex items-center gap-2">
-                    {searchOpen&&(
+                    {searchOpen && (
                         <form onSubmit={handleSearchSubmit} className="search-bar overflow-hidden">
                             <input
                                 ref={searchInputRef}
@@ -243,7 +230,7 @@ const Nav=() =>
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder="Search by name or city..."
                                 className="w-36 sm:w-48 lg:w-56 bg-[#0d1b2a] text-[#f0ebd8] placeholder-[#f0ebd8]/50 text-sm px-3 py-1.5 outline-none border border-[#0d1b2a] focus:border-[#f0ebd8]/40 transition-colors"
-                                onBlur={() => {if (!searchQuery) {gsap.to(".search-bar", {width: 0, opacity: 0, duration: 0.3, onComplete: () => setSearchOpen(false)});} }}
+                                onBlur={() => { if (!searchQuery) { gsap.to(".search-bar", { width: 0, opacity: 0, duration: 0.3, onComplete: () => setSearchOpen(false) }); } }}
                             />
                         </form>
                     )}

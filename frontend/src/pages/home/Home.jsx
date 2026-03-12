@@ -9,6 +9,7 @@ import img4 from '../../assets/img4.jpg';
 import logo from '../../assets/logo.png';
 import Footer from '../../components/Footer';
 import useMetadata from '../../hooks/useMetadata';
+import Magnetic from '../../components/Magnetic';
 import { getApprovedReviews, submitReview, getPopularHostels, getSiteSettings } from '../../api/hostel.api';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -188,6 +189,27 @@ export default function Home() {
 
         }, mainRef);
 
+        /* ── SKEW ON SCROLL ── */
+        let proxy = { skew: 0 },
+            skewSetter = gsap.quickSetter(".skew-elem", "skewY", "deg"),
+            clamp = gsap.utils.clamp(-15, 15);
+
+        ScrollTrigger.create({
+            onUpdate: (self) => {
+                let skew = clamp(self.getVelocity() / -300);
+                if (Math.abs(skew) > Math.abs(proxy.skew)) {
+                    proxy.skew = skew;
+                    gsap.to(proxy, {
+                        skew: 0,
+                        duration: 0.8,
+                        ease: "power3",
+                        overwrite: true,
+                        onUpdate: () => skewSetter(proxy.skew)
+                    });
+                }
+            }
+        });
+
         return () => ctx.kill();
     }, []);
 
@@ -213,7 +235,7 @@ export default function Home() {
     ];
 
     return (
-        <main ref={mainRef} className="w-full h-full overflow-x-hidden">
+        <main ref={mainRef} className="w-full h-full overflow-x-hidden skew-elem">
 
             {/* ═══════════════ HERO ═══════════════ */}
             <section
@@ -235,12 +257,14 @@ export default function Home() {
                             AuraLivings — premium student housing where design meets discipline and every detail is built for your success.
                         </p>
                         <div className="hero-btn flex justify-center lg:justify-start pt-2">
-                            <button
-                                onClick={() => navigate('/hostel')}
-                                className="bg-[#f0ebd8] text-[#0d1b2a] px-10 text-base sm:text-lg py-4 rounded-full hover:scale-105 active:scale-95 transition-all duration-200 font-semibold shadow-xl"
-                            >
-                                Explore Hostels
-                            </button>
+                            <Magnetic>
+                                <button
+                                    onClick={() => navigate('/hostel')}
+                                    className="bg-[#f0ebd8] text-[#0d1b2a] px-10 text-base sm:text-lg py-4 rounded-full hover:scale-105 active:scale-95 transition-all duration-200 font-semibold shadow-xl"
+                                >
+                                    Explore Hostels
+                                </button>
+                            </Magnetic>
                         </div>
                     </div>
 
@@ -324,9 +348,11 @@ export default function Home() {
                             <p className="text-sm sm:text-base lg:text-lg text-[#f0ebd8] opacity-90">
                                 Step into thoughtfully crafted living spaces where every detail is designed to help you thrive — modern interiors, natural light, and a vibrant atmosphere.
                             </p>
-                            <button onClick={() => navigate('/hostel')} className="px-6 sm:px-8 py-3 sm:py-4 bg-[#f0ebd8] text-[#0d1b2a] rounded-full text-sm sm:text-base font-semibold hover:scale-105 active:scale-95 transition-all duration-200">
-                                Explore Hostels
-                            </button>
+                            <Magnetic>
+                                <button onClick={() => navigate('/hostel')} className="px-6 sm:px-8 py-3 sm:py-4 bg-[#f0ebd8] text-[#0d1b2a] rounded-full text-sm sm:text-base font-semibold hover:scale-105 active:scale-95 transition-all duration-200">
+                                    Explore Hostels
+                                </button>
+                            </Magnetic>
                         </div>
                         <div className="w-full lg:w-1/2 flex items-end justify-center gap-2 sm:gap-5" style={{ height: '18rem' }}>
                             {[
@@ -361,6 +387,7 @@ export default function Home() {
                             {popularHostels.map((h) => (
                                 <div key={h._id}
                                     onClick={() => navigate(`/hostel/${h._id}`)}
+                                    data-cursor="view"
                                     className="popular-card group relative bg-[#0d1b2a] p-2 overflow-hidden shadow-md transition-all duration-300 hover:shadow-xl cursor-pointer hover:-translate-y-2">
                                     <div className="border-2 border-[#f0ebd8]/20">
                                         <div className="relative h-48 sm:h-52 w-full overflow-hidden">
@@ -411,9 +438,11 @@ export default function Home() {
                     )}
 
                     <div className="popular-btn text-center mt-10 sm:mt-12">
-                        <button onClick={() => navigate('/hostel')} className="px-6 sm:px-8 py-3 sm:py-4 bg-[#0d1b2a] text-[#f0ebd8] rounded-full text-sm sm:text-base font-semibold hover:scale-105 active:scale-95 transition-all duration-200">
-                            View All Hostels
-                        </button>
+                        <Magnetic>
+                            <button onClick={() => navigate('/hostel')} className="px-6 sm:px-8 py-3 sm:py-4 bg-[#0d1b2a] text-[#f0ebd8] rounded-full text-sm sm:text-base font-semibold hover:scale-105 active:scale-95 transition-all duration-200">
+                                View All Hostels
+                            </button>
+                        </Magnetic>
                     </div>
                 </div>
             </section>
@@ -435,6 +464,7 @@ export default function Home() {
                         {whyItems.map((item, i) => (
                             <div
                                 key={i}
+                                data-cursor="more"
                                 className={`${item.side === 'left' ? 'why-left' : 'why-right'} w-full lg:w-3/5 bg-[#f0ebd8] p-3 rounded-xl ${item.side === 'left' ? 'lg:rounded-r-full' : 'lg:rounded-l-full ml-auto'}`}
                             >
                                 <div className={`border-2 border-[#0d1b2a] rounded-xl ${item.side === 'left' ? 'lg:rounded-r-full' : 'lg:rounded-l-full'} overflow-hidden`}>

@@ -4,6 +4,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Footer from '../../components/Footer';
 import useMetadata from '../../hooks/useMetadata';
+import Magnetic from '../../components/Magnetic';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -174,7 +175,7 @@ export default function ContactPage() {
 
                                 <div className="flex flex-col gap-3 flex-1">
                                     {contactInfo.map((item, i) => (
-                                        <div key={i} className="flex-1 flex items-center gap-4 bg-[#f0ebd8] rounded-xl p-4 min-h-[4.5rem]">
+                                        <div key={i} data-cursor="more" className="flex-1 flex items-center gap-4 bg-[#f0ebd8] rounded-xl p-4 min-h-[4.5rem] transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg">
                                             <div className="flex-shrink-0 w-11 h-11 bg-[#0d1b2a] rounded-full flex items-center justify-center">
                                                 <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#f0ebd8">
                                                     {item.iconPath}
@@ -221,10 +222,12 @@ export default function ContactPage() {
                                     <textarea id="message" rows={4} required placeholder="Your Message"
                                         value={formData.message} onChange={handleChange}
                                         className="w-full flex-1 px-4 py-3 rounded-xl bg-[#f0ebd8] text-[#0d1b2a] placeholder-[#0d1b2a]/60 outline-none focus:ring-2 focus:ring-[#f0ebd8]/40 resize-none transition-all text-sm" />
-                                    <button disabled={isSubmitting}
-                                        className="w-full py-3 sm:py-4 rounded-xl bg-[#f0ebd8] text-[#0d1b2a] font-bold text-base hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-50 mt-auto">
-                                        {isSubmitting ? 'Sending…' : 'Send Message'}
-                                    </button>
+                                    <Magnetic>
+                                        <button disabled={isSubmitting}
+                                            className="w-full py-3 sm:py-4 rounded-xl bg-[#f0ebd8] text-[#0d1b2a] font-bold text-base hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-50 mt-auto">
+                                            {isSubmitting ? 'Sending…' : 'Send Message'}
+                                        </button>
+                                    </Magnetic>
                                 </form>
                             </div>
                         </div>
@@ -246,7 +249,7 @@ export default function ContactPage() {
                     </div>
                     <div className="why-cards-grid grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-5xl mx-auto">
                         {whyCards.map((card, i) => (
-                            <div key={i} className="why-card bg-white rounded-2xl p-6 hover:-translate-y-1 transition-transform duration-300">
+                            <div key={i} data-cursor="more" className="why-card bg-white rounded-2xl p-6 hover:-translate-y-1 transition-transform duration-300 cursor-pointer">
                                 <div className="w-12 h-12 bg-[#0d1b2a] rounded-full flex items-center justify-center mb-4">
                                     <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#f0ebd8">{card.iconPath}</svg>
                                 </div>
