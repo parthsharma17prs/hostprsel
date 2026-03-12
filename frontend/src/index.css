@@ -202,11 +202,23 @@ main,
   }
 }
 
-/* ─── SECTION TRANSITIONS ─── */
+/* ─── SECTION TRANSITIONS & OPTIMIZATION ─── */
 section {
   transform: translateZ(0);
   backface-visibility: hidden;
   will-change: transform;
+  content-visibility: auto;
+  /* SKIP RENDERING FOR OFF-SCREEN CONTENT */
+  contain-intrinsic-size: 1px 500px;
+}
+
+/* ─── PERFORMANCE LAYER ─── */
+.skew-elem,
+.reveal,
+.stat-card,
+.why-card-premium {
+  will-change: transform, opacity;
+  transform: translateZ(0);
 }
 
 /* ─── HOVER UNDERLINE LINKS ─── */

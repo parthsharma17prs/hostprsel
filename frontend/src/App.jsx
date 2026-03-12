@@ -20,18 +20,15 @@ const App = () => {
   const lenisRef = useRef(null);
 
   useEffect(() => {
-    // ── ULTRA-SMOOTH LENIS CONFIG ──
+    // ── HIGH-PERFORMANCE LENIS CONFIG ──
     const lenis = new Lenis({
-      duration: 1.6,
-      easing: (t) => {
-        // Custom ultra-smooth ease (quintic ease-out)
-        return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
-      },
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      wheelMultiplier: 0.8,       // slower = silkier
-      touchMultiplier: 1.5,
+      wheelMultiplier: 1.0,
+      touchMultiplier: 2.0,
       infinite: false,
-      lerp: 0.06,                 // lower = more buttery
+      lerp: 0.1,                 // More responsive follow
       syncTouch: false,
     });
 
@@ -40,18 +37,18 @@ const App = () => {
     // Connect Lenis ↔ ScrollTrigger
     lenis.on('scroll', ScrollTrigger.update);
 
-    // GSAP ticker drives Lenis (most reliable method)
+    // GSAP ticker drives Lenis
     gsap.ticker.add((time) => {
       lenis.raf(time * 1000);
     });
 
-    // Kill lag smoothing so GSAP never skips frames
+    // Global GSAP optimizations
     gsap.ticker.lagSmoothing(0);
+    gsap.config({ force3D: true });
 
-    // Global GSAP defaults for silkier animations
     gsap.defaults({
-      ease: 'power3.out',
-      duration: 0.9,
+      ease: 'power2.out',
+      duration: 0.8,
     });
 
     // ── PAGE TRANSITION ──

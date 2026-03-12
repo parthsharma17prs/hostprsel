@@ -130,36 +130,47 @@ export default function Home() {
                     ease: 'back.out(1.7)'
                 }, '-=0.8');
 
-            /* ── PERSPECTIVE TILT ── */
+            /* ── PERSPECTIVE TILT (Optimized) ── */
             const applyTilt = (selector) => {
                 const el = document.querySelector(selector);
                 if (!el) return;
                 const inner = el.querySelector('img');
+                let rect = null;
 
-                el.addEventListener('mousemove', (e) => {
-                    const { left, top, width, height } = el.getBoundingClientRect();
-                    const x = (e.clientX - left) / width - 0.5;
-                    const y = (e.clientY - top) / height - 0.5;
+                const onMouseEnter = () => {
+                    rect = el.getBoundingClientRect();
+                };
+
+                const onMouseMove = (e) => {
+                    if (!rect) rect = el.getBoundingClientRect();
+                    const x = (e.clientX - rect.left) / rect.width - 0.5;
+                    const y = (e.clientY - rect.top) / rect.height - 0.5;
 
                     gsap.to(inner, {
-                        rotationY: x * 15,
-                        rotationX: -y * 15,
-                        scale: 1.05,
-                        duration: 0.6,
-                        ease: 'power2.out',
-                        transformPerspective: 1000
+                        rotationY: x * 20,
+                        rotationX: -y * 20,
+                        scale: 1.08,
+                        duration: 1.2,
+                        ease: 'power3.out',
+                        transformPerspective: 1200,
+                        overwrite: 'auto'
                     });
-                });
+                };
 
-                el.addEventListener('mouseleave', () => {
+                const onMouseLeave = () => {
+                    rect = null;
                     gsap.to(inner, {
                         rotationY: 0,
                         rotationX: 0,
                         scale: 1,
-                        duration: 0.8,
-                        ease: 'power3.out'
+                        duration: 1.5,
+                        ease: 'elastic.out(1, 0.5)'
                     });
-                });
+                };
+
+                el.addEventListener('mouseenter', onMouseEnter);
+                el.addEventListener('mousemove', onMouseMove);
+                el.addEventListener('mouseleave', onMouseLeave);
             };
 
             applyTilt('.hero-img-main');

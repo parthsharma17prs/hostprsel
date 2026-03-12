@@ -17,11 +17,11 @@ const CustomCursor = () => {
             return;
         }
 
-        // ── Separate quickTo for dot (instant) and ring (lagged) ──
-        const dotXTo = gsap.quickTo(dot, "x", { duration: 0.15, ease: "power3" });
-        const dotYTo = gsap.quickTo(dot, "y", { duration: 0.15, ease: "power3" });
-        const ringXTo = gsap.quickTo(ring, "x", { duration: 0.55, ease: "power3" });
-        const ringYTo = gsap.quickTo(ring, "y", { duration: 0.55, ease: "power3" });
+        // ── High-performance quickTo (force3D enabled) ──
+        const dotXTo = gsap.quickTo(dot, "x", { duration: 0.12, ease: "power2", force3D: true });
+        const dotYTo = gsap.quickTo(dot, "y", { duration: 0.12, ease: "power2", force3D: true });
+        const ringXTo = gsap.quickTo(ring, "x", { duration: 0.45, ease: "power3", force3D: true });
+        const ringYTo = gsap.quickTo(ring, "y", { duration: 0.45, ease: "power3", force3D: true });
 
         let hidden = false;
 
