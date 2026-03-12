@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Disallow admin pages from being indexed
+Disallow: /admin
+Disallow: /admin/dashboard
+
+Sitemap: https://aura-livings.com/sitemap.xml

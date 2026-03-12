@@ -1,0 +1,24 @@
+@import "tailwindcss";
+.pill {
+  border-radius: 9999px;
+  background-image: url("/room1.jpg"); /* SAME image */
+  background-repeat: no-repeat;
+  background-size: 300% 100%;
+}
+
+/* exact slicing */
+.pill-left {
+  background-position: 0% 50%;
+}
+
+.pill-center {
+  background-position: 50% 50%;
+}
+
+.pill-right {
+  background-position: 100% 50%;
+}
+.grid-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
