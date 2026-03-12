@@ -11,6 +11,12 @@ const CustomCursor = () => {
         const ring = ringRef.current;
         const label = labelRef.current;
 
+        // Exit on touch devices
+        if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+            document.body.style.cursor = 'auto';
+            return;
+        }
+
         // ── Separate quickTo for dot (instant) and ring (lagged) ──
         const dotXTo = gsap.quickTo(dot, "x", { duration: 0.15, ease: "power3" });
         const dotYTo = gsap.quickTo(dot, "y", { duration: 0.15, ease: "power3" });
