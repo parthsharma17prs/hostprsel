@@ -6,6 +6,7 @@ import ScrollToTop from './components/ScrollToTop'
 import WhatsAppButton from './components/WhatsAppButton'
 import Preloader from './components/Preloader'
 import CustomCursor from './components/CustomCursor'
+import ScrollProgress from './components/ScrollProgress'
 import Lenis from 'lenis'
 import 'lenis/dist/lenis.css'
 import gsap from 'gsap'
@@ -75,6 +76,7 @@ const App = () => {
 
   return (
     <div className='min-h-screen w-full flex flex-col bg-[#0d1b2a]'>
+      <ScrollProgress />
       <Preloader />
       <CustomCursor />
       <ScrollToTop />
