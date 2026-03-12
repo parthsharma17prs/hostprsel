@@ -1,38 +1,57 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 
-const Magnetic = ({ children }) => {
-    const magneticRef = useRef(null);
+/**
+ * Magnetic – pulls child element toward cursor with a silky elastic spring.
+ * Now with strength prop (0.3 = subtle, 0.6 = strong) and separate label tracking.
+ */
+const Magnetic = ({ children, strength = 0.38 }) => {
+    const wrapRef = useRef(null);
+    const innerRef = useRef(null);
 
     useEffect(() => {
-        const xTo = gsap.quickTo(magneticRef.current, "x", { duration: 1, ease: "elastic.out(1, 0.3)" });
-        const yTo = gsap.quickTo(magneticRef.current, "y", { duration: 1, ease: "elastic.out(1, 0.3)" });
+        const wrap = wrapRef.current;
+        if (!wrap) return;
 
-        const handleMouseMove = (e) => {
-            const { clientX, clientY } = e;
-            const { height, width, left, top } = magneticRef.current.getBoundingClientRect();
-            const x = clientX - (left + width / 2);
-            const y = clientY - (top + height / 2);
-            xTo(x * 0.35);
-            yTo(y * 0.35);
+        const inner = wrap.firstElementChild;
+        if (!inner) return;
+
+        // Outer wrapper moves gently (less)
+        const wrapXTo = gsap.quickTo(wrap, "x", { duration: 0.9, ease: "elastic.out(1, 0.35)" });
+        const wrapYTo = gsap.quickTo(wrap, "y", { duration: 0.9, ease: "elastic.out(1, 0.35)" });
+        // Inner element moves more (creates the "pull" feel)
+        const innerXTo = gsap.quickTo(inner, "x", { duration: 1.1, ease: "elastic.out(1, 0.25)" });
+        const innerYTo = gsap.quickTo(inner, "y", { duration: 1.1, ease: "elastic.out(1, 0.25)" });
+
+        const onMove = (e) => {
+            const { left, top, width, height } = wrap.getBoundingClientRect();
+            const x = e.clientX - (left + width / 2);
+            const y = e.clientY - (top + height / 2);
+            wrapXTo(x * strength * 0.6);
+            wrapYTo(y * strength * 0.6);
+            innerXTo(x * strength);
+            innerYTo(y * strength);
         };
 
-        const handleMouseLeave = () => {
-            xTo(0);
-            yTo(0);
+        const onLeave = () => {
+            wrapXTo(0); wrapYTo(0);
+            innerXTo(0); innerYTo(0);
         };
 
-        const currentRef = magneticRef.current;
-        currentRef.addEventListener("mousemove", handleMouseMove);
-        currentRef.addEventListener("mouseleave", handleMouseLeave);
+        wrap.addEventListener('mousemove', onMove);
+        wrap.addEventListener('mouseleave', onLeave);
 
         return () => {
-            currentRef.removeEventListener("mousemove", handleMouseMove);
-            currentRef.removeEventListener("mouseleave", handleMouseLeave);
+            wrap.removeEventListener('mousemove', onMove);
+            wrap.removeEventListener('mouseleave', onLeave);
         };
-    }, []);
+    }, [strength]);
 
-    return React.cloneElement(children, { ref: magneticRef });
+    return (
+        <div ref={wrapRef} style={{ display: 'inline-flex' }}>
+            {children}
+        </div>
+    );
 };
 
 export default Magnetic;

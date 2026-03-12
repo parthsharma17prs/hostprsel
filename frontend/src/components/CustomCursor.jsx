@@ -2,109 +2,128 @@ import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 
 const CustomCursor = () => {
-    const cursorRef = useRef(null);
-    const cursorLabelRef = useRef(null);
+    const dotRef = useRef(null);      // small dot — snappy
+    const ringRef = useRef(null);     // outer ring — lagging
+    const labelRef = useRef(null);
 
     useEffect(() => {
-        const cursor = cursorRef.current;
-        const label = cursorLabelRef.current;
+        const dot = dotRef.current;
+        const ring = ringRef.current;
+        const label = labelRef.current;
 
-        const xTo = gsap.quickTo(cursor, "x", { duration: 0.5, ease: "power3" });
-        const yTo = gsap.quickTo(cursor, "y", { duration: 0.5, ease: "power3" });
+        // ── Separate quickTo for dot (instant) and ring (lagged) ──
+        const dotXTo = gsap.quickTo(dot, "x", { duration: 0.15, ease: "power3" });
+        const dotYTo = gsap.quickTo(dot, "y", { duration: 0.15, ease: "power3" });
+        const ringXTo = gsap.quickTo(ring, "x", { duration: 0.55, ease: "power3" });
+        const ringYTo = gsap.quickTo(ring, "y", { duration: 0.55, ease: "power3" });
 
-        const handleMouseMove = (e) => {
-            xTo(e.clientX);
-            yTo(e.clientY);
+        let hidden = false;
+
+        const onMouseMove = (e) => {
+            if (hidden) {
+                gsap.to([dot, ring], { opacity: 1, duration: 0.2 });
+                hidden = false;
+            }
+            dotXTo(e.clientX);
+            dotYTo(e.clientY);
+            ringXTo(e.clientX);
+            ringYTo(e.clientY);
         };
 
-        const handleMouseEnter = (e) => {
+        const onMouseLeave = () => {
+            hidden = true;
+            gsap.to([dot, ring], { opacity: 0, duration: 0.3 });
+        };
+        const onMouseEnter = () => {
+            if (hidden) {
+                hidden = false;
+                gsap.to([dot, ring], { opacity: 1, duration: 0.2 });
+            }
+        };
+
+        window.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseleave', onMouseLeave);
+        document.addEventListener('mouseenter', onMouseEnter);
+
+        // ── Interactive element hover effects ──
+        const onElemEnter = (e) => {
             const el = e.currentTarget;
-            let scale = 4;
-            let labelText = "";
-            let backgroundColor = "#f0ebd8";
-            let mixMode = "difference";
+            const cursorType = el.dataset.cursor;
 
-            if (el.dataset.cursor === "view") {
-                labelText = "VIEW";
-                scale = 6;
-                backgroundColor = "#f0ebd8";
-            } else if (el.dataset.cursor === "more") {
-                labelText = "MORE";
-                scale = 6;
+            // Dot shrinks to nothing inside the ring
+            gsap.to(dot, { scale: 0.2, duration: 0.25, ease: 'power2.out' });
+
+            if (cursorType === 'view') {
+                gsap.to(ring, { scale: 4.5, borderColor: 'transparent', backgroundColor: 'rgba(240,235,216,0.15)', duration: 0.4, ease: 'power2.out' });
+                if (label) { label.textContent = 'VIEW'; gsap.to(label, { opacity: 1, duration: 0.3 }); }
+            } else if (cursorType === 'more') {
+                gsap.to(ring, { scale: 4, borderColor: 'transparent', backgroundColor: 'rgba(240,235,216,0.12)', duration: 0.4, ease: 'power2.out' });
+                if (label) { label.textContent = 'MORE'; gsap.to(label, { opacity: 1, duration: 0.3 }); }
             } else {
-                scale = 4;
-            }
-
-            gsap.to(cursor, {
-                scale: scale,
-                backgroundColor: backgroundColor,
-                duration: 0.3,
-                ease: "power2.out"
-            });
-
-            if (label && labelText) {
-                label.innerText = labelText;
-                gsap.to(label, { opacity: 1, duration: 0.2 });
+                gsap.to(ring, { scale: 3, borderColor: '#f0ebd8', backgroundColor: 'transparent', duration: 0.35, ease: 'power2.out' });
+                if (label) gsap.to(label, { opacity: 0, duration: 0.15 });
             }
         };
 
-        const handleMouseLeave = () => {
-            gsap.to(cursor, {
-                scale: 1,
-                backgroundColor: "#f0ebd8",
-                duration: 0.3,
-                ease: "power2.out"
-            });
-            if (label) {
-                gsap.to(label, { opacity: 0, duration: 0.2 });
-            }
+        const onElemLeave = () => {
+            gsap.to(dot, { scale: 1, duration: 0.35, ease: 'elastic.out(1,0.5)' });
+            gsap.to(ring, { scale: 1, borderColor: '#f0ebd8', backgroundColor: 'transparent', duration: 0.45, ease: 'elastic.out(1,0.5)' });
+            gsap.to(label, { opacity: 0, scale: 0.8, duration: 0.2 });
         };
-
-        window.addEventListener('mousemove', handleMouseMove);
 
         const attachEvents = () => {
-            const interactiveElements = document.querySelectorAll('button, a, .clickable, [data-cursor]');
-            interactiveElements.forEach(el => {
-                el.addEventListener('mouseenter', handleMouseEnter);
-                el.addEventListener('mouseleave', handleMouseLeave);
+            const els = document.querySelectorAll('button, a, .clickable, [data-cursor]');
+            els.forEach(el => {
+                el.addEventListener('mouseenter', onElemEnter);
+                el.addEventListener('mouseleave', onElemLeave);
             });
-            return interactiveElements;
+            return els;
         };
 
-        let interactiveElements = attachEvents();
+        let els = attachEvents();
 
-        // Re-attach events if DOM changes (simplified for this context)
-        const observer = new MutationObserver(() => {
-            interactiveElements.forEach(el => {
-                el.removeEventListener('mouseenter', handleMouseEnter);
-                el.removeEventListener('mouseleave', handleMouseLeave);
+        // MutationObserver to handle dynamically loaded elements
+        const obs = new MutationObserver(() => {
+            els.forEach(el => {
+                el.removeEventListener('mouseenter', onElemEnter);
+                el.removeEventListener('mouseleave', onElemLeave);
             });
-            interactiveElements = attachEvents();
+            els = attachEvents();
         });
-
-        observer.observe(document.body, { childList: true, subtree: true });
+        obs.observe(document.body, { childList: true, subtree: true });
 
         return () => {
-            window.removeEventListener('mousemove', handleMouseMove);
-            interactiveElements.forEach(el => {
-                el.removeEventListener('mouseenter', handleMouseEnter);
-                el.removeEventListener('mouseleave', handleMouseLeave);
+            window.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseleave', onMouseLeave);
+            document.removeEventListener('mouseenter', onMouseEnter);
+            els.forEach(el => {
+                el.removeEventListener('mouseenter', onElemEnter);
+                el.removeEventListener('mouseleave', onElemLeave);
             });
-            observer.disconnect();
+            obs.disconnect();
         };
     }, []);
 
     return (
-        <div
-            ref={cursorRef}
-            className="fixed top-0 left-0 w-4 h-4 bg-[#f0ebd8] rounded-full pointer-events-none z-[1000] mix-blend-difference hidden md:flex items-center justify-center overflow-hidden"
-            style={{ transform: 'translate(-50%, -50%)' }}
-        >
-            <span
-                ref={cursorLabelRef}
-                className="text-[2px] font-bold text-[#0d1b2a] opacity-0"
-            ></span>
-        </div>
+        <>
+            {/* Dot — fast, small, always on top */}
+            <div
+                ref={dotRef}
+                className="fixed top-0 left-0 w-2 h-2 bg-[#f0ebd8] rounded-full pointer-events-none z-[1001] hidden md:block"
+                style={{ transform: 'translate(-50%,-50%)', willChange: 'transform' }}
+            />
+            {/* Ring — lagging, bigger */}
+            <div
+                ref={ringRef}
+                className="fixed top-0 left-0 w-8 h-8 rounded-full border-2 border-[#f0ebd8] pointer-events-none z-[1000] hidden md:flex items-center justify-center"
+                style={{ transform: 'translate(-50%,-50%)', willChange: 'transform', backgroundColor: 'transparent' }}
+            >
+                <span
+                    ref={labelRef}
+                    className="text-[8px] font-black text-[#f0ebd8] tracking-[0.2em] uppercase select-none opacity-0"
+                />
+            </div>
+        </>
     );
 };
 

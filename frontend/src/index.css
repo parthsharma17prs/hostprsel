@@ -1,8 +1,15 @@
 @import "tailwindcss";
 
 /* ─── BASE ─── */
-*, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
 
 /* ─── PILL IMAGE SPLITS ─── */
 .pill {
@@ -11,9 +18,18 @@ html { scroll-behavior: smooth; }
   background-repeat: no-repeat;
   background-size: 300% 100%;
 }
-.pill-left   { background-position: 0%   50%; }
-.pill-center { background-position: 50%  50%; }
-.pill-right  { background-position: 100% 50%; }
+
+.pill-left {
+  background-position: 0% 50%;
+}
+
+.pill-center {
+  background-position: 50% 50%;
+}
+
+.pill-right {
+  background-position: 100% 50%;
+}
 
 /* ─── LAYOUT ─── */
 .grid-section {
@@ -37,21 +53,26 @@ html { scroll-behavior: smooth; }
   position: relative;
   overflow: hidden;
   transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1),
-              box-shadow 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    box-shadow 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 }
+
 .why-card-premium::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(240,235,216,0.08) 0%, transparent 60%);
+  background: linear-gradient(135deg, rgba(240, 235, 216, 0.08) 0%, transparent 60%);
   opacity: 0;
   transition: opacity 0.4s;
   pointer-events: none;
 }
-.why-card-premium:hover::before { opacity: 1; }
+
+.why-card-premium:hover::before {
+  opacity: 1;
+}
+
 .why-card-premium:hover {
   transform: translateY(-8px);
-  box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
 }
 
 /* ─── STAT CARD GLOW ─── */
@@ -59,56 +80,168 @@ html { scroll-behavior: smooth; }
   position: relative;
   transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
+
 .stat-card-premium:hover {
   transform: translateY(-12px) scale(1.03);
 }
+
 .stat-card-premium::after {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  box-shadow: 0 0 0 0 rgba(240,235,216,0.4);
+  box-shadow: 0 0 0 0 rgba(240, 235, 216, 0.4);
   transition: box-shadow 0.4s;
 }
+
 .stat-card-premium:hover::after {
-  box-shadow: 0 0 40px 4px rgba(240,235,216,0.15);
+  box-shadow: 0 0 40px 4px rgba(240, 235, 216, 0.15);
 }
 
 /* ─── FLOATING ANIMATION ─── */
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-12px); }
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
 }
-.float-anim { animation: float 4s ease-in-out infinite; }
+
+.float-anim {
+  animation: float 4s ease-in-out infinite;
+}
 
 /* ─── SHIMMER ─── */
 @keyframes shimmer {
-  0%   { background-position: -200% 0; }
-  100% { background-position:  200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
 }
+
 .shimmer {
-  background: linear-gradient(90deg, transparent 25%, rgba(255,255,255,0.15) 50%, transparent 75%);
+  background: linear-gradient(90deg, transparent 25%, rgba(255, 255, 255, 0.15) 50%, transparent 75%);
   background-size: 200% 100%;
   animation: shimmer 2.5s infinite;
 }
 
 /* ─── LINE DRAW ─── */
 @keyframes line-draw {
-  from { transform: scaleX(0); }
-  to   { transform: scaleX(1); }
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
 }
+
 .line-draw {
   transform-origin: left;
-  animation: line-draw 1.2s cubic-bezier(0.23,1,0.32,1) 0.5s both;
+  animation: line-draw 1.2s cubic-bezier(0.23, 1, 0.32, 1) 0.5s both;
 }
 
 /* ─── SMOOTH SCROLL LOCK ─── */
-.no-scroll { overflow: hidden; }
+.no-scroll {
+  overflow: hidden;
+}
 
 /* ─── CURSOR CUSTOM ─── */
-* { cursor: none; }
-a, button, [data-cursor], .clickable { cursor: none; }
+* {
+  cursor: none;
+}
+
+a,
+button,
+[data-cursor],
+.clickable {
+  cursor: none;
+}
+
 @media (max-width: 767px) {
-  * { cursor: auto; }
-  a, button { cursor: pointer; }
+  * {
+    cursor: auto;
+  }
+
+  a,
+  button {
+    cursor: pointer;
+  }
+}
+
+/* ─── SMOOTH IMAGES ─── */
+img {
+  display: block;
+  max-width: 100%;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+/* ─── PAGE TRANSITION ─── */
+main,
+.flex-grow>* {
+  animation: pageFadeIn 0.6s ease both;
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─── SECTION TRANSITIONS ─── */
+section {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+/* ─── HOVER UNDERLINE LINKS ─── */
+.hover-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.hover-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: currentColor;
+  transition: width 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.hover-underline:hover::after {
+  width: 100%;
+}
+
+/* ─── GLASS CARD ─── */
+.glass {
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  background: rgba(13, 27, 42, 0.5);
+  border: 1px solid rgba(240, 235, 216, 0.12);
+}
+
+/* ─── FOCUS RING ─── */
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid #f0ebd8;
+  outline-offset: 3px;
+  border-radius: 4px;
 }
