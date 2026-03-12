@@ -186,17 +186,17 @@ const Hostel = () => {
                         <div className='relative flex items-end justify-center scale-100 sm:scale-110 lg:scale-125 xl:scale-135'>
                             <div className='hostel-arc-1 bg-[#f0ebd8] rounded-t-full z-30 p-2 h-64 w-48 sm:h-72 sm:w-52 md:h-80 md:w-60 shadow-2xl flex-shrink-0'>
                                 <div className='overflow-hidden border-2 h-full w-full rounded-t-full border-[#0d1b2a]'>
-                                    <img src={siteImages?.hostelArchImages?.[0] || img5} alt="" className='h-full w-full object-cover' />
+                                    <img src={siteImages?.hostelArchImages?.[0] || 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&q=80'} alt="" className='h-full w-full object-cover' onError={e => e.target.src = 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&q=80'} />
                                 </div>
                             </div>
                             <div className='hostel-arc-2 bg-[#f0ebd8] rounded-t-full z-20 -ml-16 -mb-12 p-2 h-64 w-48 sm:h-72 sm:w-52 md:h-80 md:w-60 shadow-xl flex-shrink-0'>
                                 <div className='overflow-hidden border-2 h-full w-full rounded-t-full border-[#0d1b2a]'>
-                                    <img src={siteImages?.hostelArchImages?.[1] || img6} alt="" className='h-full w-full object-cover object-center' />
+                                    <img src={siteImages?.hostelArchImages?.[1] || 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=500&q=80'} alt="" className='h-full w-full object-cover object-center' onError={e => e.target.src = 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=500&q=80'} />
                                 </div>
                             </div>
                             <div className='hostel-arc-3 hidden md:block bg-[#f0ebd8] rounded-t-full absolute z-0 p-2 h-[26rem] w-80 lg:h-[30rem] lg:w-96 left-0 opacity-30 shadow-lg'>
                                 <div className='overflow-hidden border-2 h-full w-full rounded-t-full border-[#0d1b2a]'>
-                                    <img src={siteImages?.hostelArchImages?.[2] || img7} alt="" className='h-full w-full object-cover object-center' />
+                                    <img src={siteImages?.hostelArchImages?.[2] || 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=500&q=80'} alt="" className='h-full w-full object-cover object-center' onError={e => e.target.src = 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=500&q=80'} />
                                 </div>
                             </div>
                         </div>

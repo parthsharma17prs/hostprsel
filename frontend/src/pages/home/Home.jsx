@@ -168,23 +168,46 @@ export default function Home() {
                 }
             });
 
-            /* ── STATS COUNTER ── */
-            const stats = gsap.utils.toArray('.stat-card');
-            stats.forEach(stat => {
-                const num = stat.querySelector('h3');
-                const finalVal = parseInt(num.innerText);
-                if (!isNaN(finalVal)) {
-                    gsap.from(num, {
-                        innerText: 0,
-                        duration: 2,
-                        snap: { innerText: 1 },
-                        ease: "power2.out",
-                        scrollTrigger: {
-                            trigger: stat,
-                            start: "top 90%"
+
+            /* ── ANIMATED COUNTERS ── */
+            gsap.utils.toArray('.stat-card').forEach((card, i) => {
+                gsap.from(card, {
+                    y: 60,
+                    opacity: 0,
+                    duration: 1,
+                    delay: i * 0.1,
+                    ease: 'power3.out',
+                    scrollTrigger: { trigger: '.stats-section', start: 'top 80%', once: true }
+                });
+                const counterEl = card.querySelector('.counter');
+                if (counterEl) {
+                    const target = parseFloat(counterEl.dataset.target);
+                    const suffix = counterEl.dataset.suffix || '';
+                    const isFloat = !Number.isInteger(target);
+                    const obj = { val: 0 };
+                    gsap.to(obj, {
+                        val: target,
+                        duration: 2.5,
+                        ease: 'power2.out',
+                        delay: 0.3 + i * 0.1,
+                        scrollTrigger: { trigger: '.stats-section', start: 'top 75%', once: true },
+                        onUpdate: () => {
+                            counterEl.textContent = (isFloat ? obj.val.toFixed(1) : Math.round(obj.val)) + suffix;
                         }
                     });
                 }
+            });
+
+            /* ── WHY CARDS ── */
+            gsap.utils.toArray('.why-card-premium').forEach((card, i) => {
+                gsap.from(card, {
+                    y: 80,
+                    opacity: 0,
+                    duration: 1.2,
+                    delay: i * 0.12,
+                    ease: 'power4.out',
+                    scrollTrigger: { trigger: '.why-rows', start: 'top 80%', once: true }
+                });
             });
 
         }, mainRef);
@@ -220,18 +243,18 @@ export default function Home() {
         { icon: <path d="M3.78307 2.82598L12 1L20.2169 2.82598C20.6745 2.92766 21 3.33347 21 3.80217V13.7889C21 15.795 19.9974 17.6684 18.3282 18.7812L12 23L5.6718 18.7812C4.00261 17.6684 3 15.795 3 13.7889V3.80217C3 3.33347 3.32553 2.92766 3.78307 2.82598Z" />, title: "Safe & Secure", desc: "Biometric access, 24/7 CCTV, on-site staff, and a gated campus so you can focus without worry." },
     ];
 
-    const whyItems = [
-        { side: 'left', title: "Curated Living Spaces", desc: "Every room is thoughtfully designed — ergonomic furniture, ample natural light, and aesthetics that inspire productivity.", icon: <path d="M11.602 13.7599L13.014 15.1719L21.4795 6.7063L22.8938 8.12051L13.014 18.0003L6.65 11.6363L8.06421 10.2221L10.189 12.3469L11.6025 13.7594L11.602 13.7599ZM11.6037 10.9322L16.5563 5.97949L17.9666 7.38977L13.014 12.3424L11.6037 10.9322ZM8.77698 16.5873L7.36396 18.0003L1 11.6363L2.41421 10.2221L3.82723 11.6352L3.82604 11.6363L8.77698 16.5873Z" /> },
-        { side: 'right', title: "Structured Daily Rhythm", desc: "Balanced schedules for study, meals, exercise, and rest — designed to help you perform at your best every day.", icon: <path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM13 12V7H11V14H17V12H13Z" /> },
-        { side: 'left', title: "Mentorship & Growth", desc: "Connect with experienced mentors, attend workshops, and access resources that accelerate your academic and personal growth.", icon: <path d="M12 7.00002C16.4183 7.00002 20 10.5817 20 15C20 19.4183 16.4183 23 12 23C7.58172 23 4 19.4183 4 15C4 10.5817 7.58172 7.00002 12 7.00002ZM12 10.5L10.6775 13.1797L7.72025 13.6094L9.86012 15.6953L9.35497 18.6406L12 17.25L14.645 18.6406L14.1399 15.6953L16.2798 13.6094L13.3225 13.1797L12 10.5ZM13 1.99902L18 2.00002V5.00002L16.6366 6.13758C15.5305 5.55773 14.3025 5.17887 13.0011 5.04951L13 1.99902ZM11 1.99902L10.9997 5.04943C9.6984 5.17866 8.47046 5.55738 7.36441 6.13706L6 5.00002V2.00002L11 1.99902Z" /> },
-        { side: 'right', title: "Always-On Support", desc: "Our resident managers and support team are available round the clock for academic queries, emergencies, and everything in between.", icon: <path d="M4 12H7C8.10457 12 9 12.8954 9 14V19C9 20.1046 8.10457 21 7 21H4C2.89543 21 2 20.1046 2 19V12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12V19C22 20.1046 21.1046 21 20 21H17C15.8954 21 15 20.1046 15 19V14C15 12.8954 15.8954 12 17 12H20C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12Z" /> },
+    const stats = [
+        { icon: <path d="M12 19H14V6.00003L20.3939 8.74028C20.7616 8.89786 21 9.2594 21 9.65943V19H23V21H1V19H3V5.6499C3 5.25472 3.23273 4.89659 3.59386 4.73609L11.2969 1.31251C11.5493 1.20035 11.8448 1.314 11.9569 1.56634C11.9853 1.63027 12 1.69945 12 1.76941V19Z" />, number: 10, suffix: '+', label: "Hostel Locations" },
+        { icon: <path d="M2 22C2 17.5817 5.58172 14 10 14C14.4183 14 18 17.5817 18 22H2ZM10 13C6.685 13 4 10.315 4 7C4 3.685 6.685 1 10 1C13.315 1 16 3.685 16 7C16 10.315 13.315 13 10 13ZM17.3628 15.2332C20.4482 16.0217 22.7679 18.7235 22.9836 22H20C20 19.3902 19.0002 17.0139 17.3628 15.2332ZM15.3401 12.9569C16.9728 11.4922 18 9.36607 18 7C18 5.58266 17.6314 4.25141 16.9849 3.09687C19.2753 3.55397 21 5.57465 21 8C21 10.7625 18.7625 13 16 13C15.7763 13 15.556 12.9853 15.3401 12.9569Z" />, number: 500, suffix: '+', label: "Students Trust Us" },
+        { icon: <path d="M22 11V20H20V17H4V20H2V4H4V14H12V7H18C20.2091 7 22 8.79086 22 11ZM8 13C6.34315 13 5 11.6569 5 10C5 8.34315 6.34315 7 8 7C9.65685 7 11 8.34315 11 10C11 11.6569 9.65685 13 8 13Z" />, number: 100, suffix: '+', label: "Beds Available" },
+        { icon: <path d="M12.0006 18.26L4.94715 22.2082L6.52248 14.2799L0.587891 8.7918L8.61493 7.84006L12.0006 0.5L15.3862 7.84006L23.4132 8.7918L17.4787 14.2799L19.054 22.2082L12.0006 18.26Z" />, number: 4.8, suffix: '★', label: "Average Rating" },
     ];
 
-    const stats = [
-        { icon: <path d="M12 19H14V6.00003L20.3939 8.74028C20.7616 8.89786 21 9.2594 21 9.65943V19H23V21H1V19H3V5.6499C3 5.25472 3.23273 4.89659 3.59386 4.73609L11.2969 1.31251C11.5493 1.20035 11.8448 1.314 11.9569 1.56634C11.9853 1.63027 12 1.69945 12 1.76941V19Z" />, number: "10+", label: "Hostel Locations" },
-        { icon: <path d="M2 22C2 17.5817 5.58172 14 10 14C14.4183 14 18 17.5817 18 22H2ZM10 13C6.685 13 4 10.315 4 7C4 3.685 6.685 1 10 1C13.315 1 16 3.685 16 7C16 10.315 13.315 13 10 13ZM17.3628 15.2332C20.4482 16.0217 22.7679 18.7235 22.9836 22H20C20 19.3902 19.0002 17.0139 17.3628 15.2332ZM15.3401 12.9569C16.9728 11.4922 18 9.36607 18 7C18 5.58266 17.6314 4.25141 16.9849 3.09687C19.2753 3.55397 21 5.57465 21 8C21 10.7625 18.7625 13 16 13C15.7763 13 15.556 12.9853 15.3401 12.9569Z" />, number: "50+", label: "Students Trust Us" },
-        { icon: <path d="M22 11V20H20V17H4V20H2V4H4V14H12V7H18C20.2091 7 22 8.79086 22 11ZM8 13C6.34315 13 5 11.6569 5 10C5 8.34315 6.34315 7 8 7C9.65685 7 11 8.34315 11 10C11 11.6569 9.65685 13 8 13Z" />, number: "100+", label: "Beds Available" },
-        { icon: <path d="M12.0006 18.26L4.94715 22.2082L6.52248 14.2799L0.587891 8.7918L8.61493 7.84006L12.0006 0.5L15.3862 7.84006L23.4132 8.7918L17.4787 14.2799L19.054 22.2082L12.0006 18.26Z" />, number: "4.5+", label: "Ratings" },
+    const whyItems = [
+        { title: "Curated Living Spaces", desc: "Every room is thoughtfully designed — ergonomic furniture, ample natural light, and aesthetics that inspire productivity.", icon: <path d="M11.602 13.7599L13.014 15.1719L21.4795 6.7063L22.8938 8.12051L13.014 18.0003L6.65 11.6363L8.06421 10.2221L10.189 12.3469L11.6025 13.7594L11.602 13.7599ZM11.6037 10.9322L16.5563 5.97949L17.9666 7.38977L13.014 12.3424L11.6037 10.9322ZM8.77698 16.5873L7.36396 18.0003L1 11.6363L2.41421 10.2221L3.82723 11.6352L3.82604 11.6363L8.77698 16.5873Z" />, accent: '#e8d5b7', img: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&q=80' },
+        { title: "Structured Daily Rhythm", desc: "Balanced schedules for study, meals, exercise, and rest — designed to help you perform at your best every day.", icon: <path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM13 12V7H11V14H17V12H13Z" />, accent: '#c9d8e8', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80' },
+        { title: "Mentorship & Growth", desc: "Connect with experienced mentors, attend workshops, and access resources that accelerate your academic and personal growth.", icon: <path d="M12 7.00002C16.4183 7.00002 20 10.5817 20 15C20 19.4183 16.4183 23 12 23C7.58172 23 4 19.4183 4 15C4 10.5817 7.58172 7.00002 12 7.00002ZM12 10.5L10.6775 13.1797L7.72025 13.6094L9.86012 15.6953L9.35497 18.6406L12 17.25L14.645 18.6406L14.1399 15.6953L16.2798 13.6094L13.3225 13.1797L12 10.5Z" />, accent: '#d4e8c9', img: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&q=80' },
+        { title: "Always-On Support", desc: "Our resident managers and support team are available round the clock for academic queries, emergencies, and everything in between.", icon: <path d="M4 12H7C8.10457 12 9 12.8954 9 14V19C9 20.1046 8.10457 21 7 21H4C2.89543 21 2 20.1046 2 19V12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12V19C22 20.1046 21.1046 21 20 21H17C15.8954 21 15 20.1046 15 19V14C15 12.8954 15.8954 12 17 12H20C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12Z" />, accent: '#e8c9c9', img: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=600&q=80' },
     ];
 
     return (
@@ -273,11 +296,21 @@ export default function Home() {
                         <div className="relative w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 lg:w-[26rem] lg:h-[26rem]">
                             {/* Main arch image */}
                             <div className="hero-img-main absolute inset-0 border-4 border-[#f0ebd8] rounded-t-full overflow-hidden bg-[#f0ebd8] shadow-2xl">
-                                <img src={siteImages?.heroMain || '/room1.jpg'} alt="Hostel" className="w-full h-full object-cover" />
+                                <img
+                                    src={siteImages?.heroMain || 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=700&q=80'}
+                                    alt="Hostel"
+                                    className="w-full h-full object-cover"
+                                    onError={e => e.target.src = 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=700&q=80'}
+                                />
                             </div>
                             {/* Small circle */}
                             <div className="hero-img-sub absolute -bottom-4 -left-4 w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-[#f0ebd8] bg-[#f0ebd8] shadow-xl">
-                                <img src={siteImages?.heroSub || '/room2.jpg'} alt="" className="w-full h-full object-cover" />
+                                <img
+                                    src={siteImages?.heroSub || 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=300&q=80'}
+                                    alt=""
+                                    className="w-full h-full object-cover"
+                                    onError={e => e.target.src = 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=300&q=80'}
+                                />
                             </div>
                         </div>
                     </div>
@@ -288,7 +321,12 @@ export default function Home() {
             <section className="about-section w-full bg-[#0d1b2a]">
                 <div className="container mx-auto flex flex-col lg:flex-row min-h-[28rem] lg:min-h-[36rem]">
                     <div className="about-img w-full lg:w-2/5 h-64 sm:h-72 md:h-80 lg:h-auto relative overflow-hidden lg:rounded-tr-[200px]">
-                        <img src={siteImages?.aboutImage || '/room3.jpg'} alt="" className="h-full w-full object-cover" />
+                        <img
+                            src={siteImages?.aboutImage || 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80'}
+                            alt="Premium hostel room"
+                            className="h-full w-full object-cover"
+                            onError={e => e.target.src = 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80'}
+                        />
                     </div>
                     <div className="about-text w-full lg:w-3/5 flex justify-center items-center p-6 sm:p-10 lg:p-16">
                         <div className="max-w-xl text-[#f0ebd8] space-y-4 sm:space-y-6 text-center lg:text-left">
@@ -356,12 +394,12 @@ export default function Home() {
                         </div>
                         <div className="w-full lg:w-1/2 flex items-end justify-center gap-2 sm:gap-5" style={{ height: '18rem' }}>
                             {[
-                                { src: siteImages?.exploreImages?.[0] || img1, h: 'h-[70%]' },
-                                { src: siteImages?.exploreImages?.[1] || img2, h: 'h-[90%]' },
-                                { src: siteImages?.exploreImages?.[2] || img3, h: 'h-[70%]' },
+                                { src: siteImages?.exploreImages?.[0] || 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=400&q=80', h: 'h-[70%]' },
+                                { src: siteImages?.exploreImages?.[1] || 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=80', h: 'h-[90%]' },
+                                { src: siteImages?.exploreImages?.[2] || 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=400&q=80', h: 'h-[70%]' },
                             ].map(({ src, h }, i) => (
                                 <div key={i} className={`destination-img flex-1 max-w-[6rem] sm:max-w-[9rem] lg:max-w-[10rem] ${h} bg-[#f0ebd8] rounded-t-full overflow-hidden`}>
-                                    <img src={src} alt="" className="h-full w-full object-cover object-center" />
+                                    <img src={src} alt="" className="h-full w-full object-cover object-center" onError={e => e.target.src = 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=80'} />
                                 </div>
                             ))}
                         </div>
@@ -448,46 +486,62 @@ export default function Home() {
             </section>
 
             {/* ═══════════════ WHY CHOOSE US ═══════════════ */}
-            <section className="why-section w-full bg-[#000814] py-14 sm:py-16 lg:py-24">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="why-heading text-center mb-12 sm:mb-16 lg:mb-20 space-y-4">
-                        <span className="inline-block px-4 py-2 bg-[#f0ebd8] text-[#0d1b2a] rounded-full text-xs sm:text-sm font-medium">
-                            Why Choose Us
-                        </span>
-                        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#f0ebd8]">Your Success is Our Priority</h2>
-                        <p className="text-sm sm:text-base lg:text-lg text-[#f0ebd8] max-w-2xl mx-auto opacity-90">
-                            We've designed every aspect of our hostels to support your academic journey and personal growth.
+            <section className="why-section w-full bg-[#000814] py-16 sm:py-20 lg:py-28 relative overflow-hidden">
+                {/* Ambient blobs */}
+                <div className="absolute inset-0 pointer-events-none">
+                    <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-[#f0ebd8] rounded-full blur-[180px] opacity-[0.04]" />
+                    <div className="absolute -bottom-32 -right-32 w-[500px] h-[500px] bg-[#f0ebd8] rounded-full blur-[180px] opacity-[0.04]" />
+                </div>
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    {/* Heading */}
+                    <div className="why-heading grid lg:grid-cols-2 gap-10 lg:gap-16 items-end mb-16 sm:mb-20">
+                        <div className="space-y-4">
+                            <div className="inline-flex items-center gap-2 px-5 py-2 bg-[#f0ebd8]/10 border border-[#f0ebd8]/20 rounded-full">
+                                <div className="w-2 h-2 bg-[#f0ebd8] rounded-full" />
+                                <span className="text-[#f0ebd8] text-xs sm:text-sm font-semibold tracking-widest uppercase">Why Choose Us</span>
+                            </div>
+                            <h2 className="reveal text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-[#f0ebd8] leading-tight">
+                                Your Success Is{' '}
+                                <span className="text-transparent" style={{ WebkitTextStroke: '2px #f0ebd8' }}>Our Priority</span>
+                            </h2>
+                        </div>
+                        <p className="reveal text-base sm:text-lg text-[#f0ebd8]/60 lg:text-right leading-relaxed">
+                            We've designed every aspect of our hostels to support your academic journey and personal growth — because your win is our win.
                         </p>
                     </div>
 
-                    <div className="why-rows space-y-5 sm:space-y-6 lg:space-y-10">
+                    {/* Premium grid */}
+                    <div className="why-rows grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6 lg:gap-8">
                         {whyItems.map((item, i) => (
                             <div
                                 key={i}
                                 data-cursor="more"
-                                className={`${item.side === 'left' ? 'why-left' : 'why-right'} w-full lg:w-3/5 bg-[#f0ebd8] p-3 rounded-xl ${item.side === 'left' ? 'lg:rounded-r-full' : 'lg:rounded-l-full ml-auto'}`}
+                                className="why-card-premium group relative rounded-2xl overflow-hidden border border-[#f0ebd8]/10 bg-[#0d1b2a] cursor-pointer"
+                                style={{ minHeight: '260px' }}
                             >
-                                <div className={`border-2 border-[#0d1b2a] rounded-xl ${item.side === 'left' ? 'lg:rounded-r-full' : 'lg:rounded-l-full'} overflow-hidden`}>
-                                    <div className={`flex ${item.side === 'right' ? 'flex-col-reverse sm:flex-row' : 'flex-col sm:flex-row'} items-stretch`}>
-                                        {/* Icon block — always first in DOM for left, reversed-col for right */}
-                                        {item.side === 'right' && (
-                                            <div className="w-full sm:w-2/5 bg-[#0d1b2a] flex items-center justify-center py-8 sm:py-0 lg:rounded-l-full">
-                                                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-[#f0ebd8] rounded-full flex items-center justify-center">
-                                                    <svg className="w-7 h-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#0d1b2a">{item.icon}</svg>
-                                                </div>
-                                            </div>
-                                        )}
-                                        <div className="w-full sm:w-3/5 p-6 sm:p-8 text-center sm:text-left space-y-2">
-                                            <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#0d1b2a]">{item.title}</h3>
-                                            <p className="text-sm sm:text-base text-[#0d1b2a] leading-relaxed">{item.desc}</p>
+                                {/* Background image with overlay */}
+                                <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity duration-700">
+                                    <img src={item.img} alt="" className="w-full h-full object-cover" onError={e => e.target.style.display = 'none'} />
+                                </div>
+                                <div className="absolute inset-0 bg-gradient-to-br from-[#0d1b2a]/80 via-[#0d1b2a]/60 to-transparent" />
+
+                                {/* Content */}
+                                <div className="relative z-10 p-7 sm:p-8 lg:p-10 h-full flex flex-col justify-between">
+                                    <div className="space-y-4">
+                                        <div className="w-14 h-14 bg-[#f0ebd8]/10 border border-[#f0ebd8]/30 rounded-2xl flex items-center justify-center group-hover:bg-[#f0ebd8]/20 group-hover:border-[#f0ebd8]/60 transition-all duration-300">
+                                            <svg className="w-7 h-7 text-[#f0ebd8]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">{item.icon}</svg>
                                         </div>
-                                        {item.side === 'left' && (
-                                            <div className="w-full sm:w-2/5 bg-[#0d1b2a] flex items-center justify-center py-8 sm:py-0 lg:rounded-r-full">
-                                                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-[#f0ebd8] rounded-full flex items-center justify-center">
-                                                    <svg className="w-7 h-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#0d1b2a">{item.icon}</svg>
-                                                </div>
-                                            </div>
-                                        )}
+                                        <div className="space-y-2">
+                                            <h3 className="text-xl sm:text-2xl font-bold text-[#f0ebd8]">{item.title}</h3>
+                                            <p className="text-sm sm:text-base text-[#f0ebd8]/70 leading-relaxed">{item.desc}</p>
+                                        </div>
+                                    </div>
+                                    {/* Bottom arrow indicator */}
+                                    <div className="flex items-center gap-2 mt-6 text-[#f0ebd8]/40 group-hover:text-[#f0ebd8] transition-colors duration-300">
+                                        <div className="h-px flex-1 bg-current opacity-30" />
+                                        <svg className="w-5 h-5 translate-x-0 group-hover:translate-x-1 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                        </svg>
                                     </div>
                                 </div>
                             </div>
@@ -510,39 +564,60 @@ export default function Home() {
                         </div>
                     </div>
                     <div className="homefeel-img w-full lg:w-1/3 h-64 sm:h-80 lg:h-auto overflow-hidden lg:rounded-tl-[10rem] order-1 lg:order-2">
-                        <img src={siteImages?.homeFeelImage || img4} alt="" className="h-full w-full object-cover object-center" />
+                        <img
+                            src={siteImages?.homeFeelImage || 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=600&q=80'}
+                            alt="Student thriving"
+                            className="h-full w-full object-cover object-center"
+                            onError={e => e.target.src = 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=600&q=80'}
+                        />
                     </div>
                 </div>
             </section>
 
             {/* ═══════════════ STATS ═══════════════ */}
-            <section className="stats-section w-full bg-[#0d1b2a] py-14 sm:py-16 lg:py-24">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <section className="stats-section w-full bg-[#0d1b2a] py-16 sm:py-20 lg:py-28 relative overflow-hidden">
+                {/* Background decorative elements */}
+                <div className="absolute inset-0 pointer-events-none">
+                    <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#f0ebd8] rounded-full blur-[120px] opacity-5" />
+                    <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#f0ebd8] rounded-full blur-[120px] opacity-5" />
+                </div>
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     {/* Heading */}
-                    <div className="text-center mb-10 sm:mb-14 space-y-3">
-                        <span className="inline-block px-4 py-2 bg-[#f0ebd8] text-[#0d1b2a] rounded-full text-xs sm:text-sm font-semibold">
-                            Our Impact
-                        </span>
-                        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#f0ebd8]">
-                            Numbers That Speak for Themselves
+                    <div className="text-center mb-16 sm:mb-20 space-y-4">
+                        <div className="inline-flex items-center gap-2 px-5 py-2 bg-[#f0ebd8]/10 border border-[#f0ebd8]/20 rounded-full">
+                            <div className="w-2 h-2 bg-[#f0ebd8] rounded-full animate-pulse" />
+                            <span className="text-[#f0ebd8] text-xs sm:text-sm font-semibold tracking-widest uppercase">Our Impact</span>
+                        </div>
+                        <h2 className="reveal text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-[#f0ebd8] leading-tight">
+                            Numbers That{' '}
+                            <span className="relative inline-block">
+                                <span className="relative z-10">Speak</span>
+                                <span className="absolute bottom-1 left-0 w-full h-[6px] bg-[#f0ebd8] opacity-30 rounded-full" />
+                            </span>{' '}for Themselves
                         </h2>
-                        <p className="text-sm sm:text-base text-[#f0ebd8] opacity-75 max-w-xl mx-auto">
+                        <p className="reveal text-base sm:text-lg text-[#f0ebd8]/60 max-w-xl mx-auto">
                             Trusted by students across India for comfort, safety, and academic growth.
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 max-w-5xl mx-auto">
                         {stats.map((stat, index) => (
-                            <div key={index} className="stat-card bg-[#f0ebd8] p-2 sm:p-3 rounded-t-full hover:-translate-y-2 transition-transform duration-300">
-                                <div className="border-2 border-[#0d1b2a] rounded-t-full overflow-hidden">
-                                    <div className="h-28 sm:h-36 lg:h-40 bg-[#0d1b2a] rounded-t-full flex items-center justify-center">
-                                        <div className="w-11 h-11 sm:w-14 sm:h-14 bg-[#f0ebd8] rounded-full flex items-center justify-center">
-                                            <svg className="w-5 h-5 sm:w-7 sm:h-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#0d1b2a">{stat.icon}</svg>
-                                        </div>
+                            <div key={index} className="stat-card stat-card-premium group">
+                                {/* Glowing border */}
+                                <div className="relative h-full bg-gradient-to-b from-[#f0ebd8]/10 to-transparent border border-[#f0ebd8]/20 rounded-2xl p-6 sm:p-8 flex flex-col items-center text-center gap-4 overflow-hidden">
+                                    {/* shimmer on hover */}
+                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 shimmer" />
+                                    {/* Icon circle */}
+                                    <div className="relative z-10 w-14 h-14 sm:w-16 sm:h-16 bg-[#f0ebd8]/10 border border-[#f0ebd8]/30 rounded-full flex items-center justify-center group-hover:bg-[#f0ebd8]/20 group-hover:border-[#f0ebd8]/50 transition-all duration-300">
+                                        <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#f0ebd8]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">{stat.icon}</svg>
                                     </div>
-                                    <div className="py-5 sm:py-7 px-3 text-center space-y-1">
-                                        <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#0d1b2a]">{stat.number}</h3>
-                                        <p className="text-xs sm:text-sm text-[#0d1b2a] font-medium">{stat.label}</p>
+                                    {/* Number */}
+                                    <div className="relative z-10 space-y-1">
+                                        <h3 className="stat-number text-4xl sm:text-5xl lg:text-6xl font-black text-[#f0ebd8] leading-none">
+                                            <span className="counter" data-target={stat.number} data-suffix={stat.suffix}>0{stat.suffix}</span>
+                                        </h3>
+                                        <div className="w-8 h-0.5 bg-[#f0ebd8]/30 mx-auto rounded-full line-draw" />
+                                        <p className="text-xs sm:text-sm text-[#f0ebd8]/60 font-medium uppercase tracking-wider">{stat.label}</p>
                                     </div>
                                 </div>
                             </div>
