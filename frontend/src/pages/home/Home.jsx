@@ -131,6 +131,41 @@ export default function Home() {
                     ease: 'back.out(1.7)'
                 }, '-=0.8');
 
+            /* ── PERSPECTIVE TILT ── */
+            const applyTilt = (selector) => {
+                const el = document.querySelector(selector);
+                if (!el) return;
+                const inner = el.querySelector('img');
+
+                el.addEventListener('mousemove', (e) => {
+                    const { left, top, width, height } = el.getBoundingClientRect();
+                    const x = (e.clientX - left) / width - 0.5;
+                    const y = (e.clientY - top) / height - 0.5;
+
+                    gsap.to(inner, {
+                        rotationY: x * 15,
+                        rotationX: -y * 15,
+                        scale: 1.05,
+                        duration: 0.6,
+                        ease: 'power2.out',
+                        transformPerspective: 1000
+                    });
+                });
+
+                el.addEventListener('mouseleave', () => {
+                    gsap.to(inner, {
+                        rotationY: 0,
+                        rotationX: 0,
+                        scale: 1,
+                        duration: 0.8,
+                        ease: 'power3.out'
+                    });
+                });
+            };
+
+            applyTilt('.hero-img-main');
+            applyTilt('.about-img');
+
             /* ── PARALLAX ── */
             gsap.to('.hero-img-main img', {
                 yPercent: 20,
